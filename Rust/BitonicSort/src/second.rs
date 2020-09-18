@@ -1,10 +1,16 @@
 use super::SortOrder;
 
-pub fn sort<T:Ord>(x:&mut [T],order:&SortOrder){
+pub fn sort<T:Ord>(x:&mut [T],order:&SortOrder)->Result<(),String>{
+    if x.len().is_power_of_two(){
     match *order{
         SortOrder::Ascending=>do_sort(x,true),
         SortOrder::Descending=>do_sort(x,false),
     };
+    Ok(())
+    }
+    else{
+        Err(format!("The length of x is not a power of two.(x.len():{}",x.len()))
+    }
 }
 
 fn do_sort<T:Ord>(x:&mut [T],up:bool){
@@ -44,13 +50,19 @@ mod tests{
     fn sort_u32_ascending(){
         let mut x=vec!["Rust","is","fast","and","memory-efficient","with","no","GC"];
 
-        sort(&mut x,&Ascending);
+        assert_eq!(sort(&mut x,&Ascending),Ok(()));
         assert_eq!(x,vec!["GC","Rust","and","fast","is","memory-efficient","no","with"]);
     }
     #[test]
     fn sort_u32_descending(){
         let mut x=vec!["Rust","is","fast","and","memory-efficient","with","no","GC"];
-        sort(&mut x,&Descending);
+        
+        assert_eq!(sort(&mut x,&Descending),Ok(()));
         assert_eq!(x,vec!["with","no","memory-efficient","is","fast","and","Rust","GC"]);
+    }
+    #[test]
+    fn sort_to_fail(){
+        let mut x=vec![10,30,20];
+        assert!(sort(& mut x,&Ascending).is_err());
     }
 }

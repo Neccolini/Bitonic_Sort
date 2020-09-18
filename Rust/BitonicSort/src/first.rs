@@ -1,3 +1,4 @@
+#[allow(non_snake_case)]
 pub fn sort(x:&mut [u32],up:bool){
     if x.len()>1{
         let mid_point=x.len()/2;
